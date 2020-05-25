@@ -1,0 +1,12 @@
+elec_data <- read.table("./data/household_power_consumption.txt", sep = ";", header = TRUE)
+elec_data <- elec_data[which(as.character(elec_data$Date) == "1/2/2007" | as.character(elec_data$Date) == "2/2/2007"), ]
+elec_data <- transform(elec_data, datetime = paste(Date, Time, sep = " "))
+elec_data <- transform(elec_data, datetime = strptime(datetime, format = "%d/%m/%Y %H:%M:%S"))
+elec_data <- transform(elec_data, Sub_metering_1 = as.numeric(as.character(Sub_metering_1)), Sub_metering_2 = as.numeric(as.character(Sub_metering_2)), Sub_metering_3 = as.numeric(as.character(Sub_metering_3)))
+with(elec_data, plot(datetime, Sub_metering_1, ylab = "Energy sub metering", type = "n"))
+with(elec_data, lines(datetime, Sub_metering_1, col = "black"))
+with(elec_data, lines(datetime, Sub_metering_2, col = "red"))
+with(elec_data, lines(datetime, Sub_metering_3, col = "blue"))
+legend("topright", legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), lty = c(1,1,1), col = c("black","red","blue"))
+dev.copy(png, "plot.3.png")
+dev.off()
